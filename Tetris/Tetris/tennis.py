@@ -1,4 +1,4 @@
-def tennis():
+def start():
     import tkinter
     import time
     from objects import Ball, Platform, Score

@@ -1,4 +1,9 @@
 import tennis
+from top_menu import TopMenu
+import tkinter
 
-if __name__ == '__main__':
-    tennis.tennis()
+
+root = tkinter.Tk()
+top_menu = TopMenu(root)
+
+root.mainloop()
