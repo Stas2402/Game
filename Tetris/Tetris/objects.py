@@ -53,9 +53,6 @@ class Ball:
         elif ball_pos[1] <= 0:
             self.y *= -1
 
-
-
-
 class Platform:
 
     def __init__(self, canvas, color):
@@ -87,7 +84,6 @@ class Platform:
         if pos[0] < 0 or pos[2] > 500:
             self.x = 0
 
-
 class Score:
 
     def __init__(self, canvas):
@@ -99,4 +95,56 @@ class Score:
     def update_score(self):
         self.points += 1
         self.canvas.itemconfig(self.score, text=self.points)
+
+class TetrisFigure:
+
+    def __init__(self, canvas):
+        self.canvas = canvas
+        self.figure = self.get_block()
+        self.matrix(self.figure)
+
+    def get_block(self):
+        ###############
+        # 0  1  2  3  #
+        # 4  5  6  7  #
+        # 8  9  10 11 #
+        # 12 13 14 15 #
+        ###############
+        figures = [
+            [[1, 5, 9, 13], [4, 5, 6, 7], [2, 6, 10, 14], [8, 9, 10, 11]],
+            [[0, 4, 5, 6], [1, 2, 5, 9], [4, 5, 6, 10], [1, 5, 8, 9]],
+            [[0, 4, 5, 9], [5, 6, 8, 9]],
+            [[1, 4, 5, 6], [1, 5, 6, 9], [4, 5, 6, 9], [1, 4, 5, 9]],
+            [[2, 4, 5, 6], [1, 5, 9, 10], [4, 5, 6, 8], [0, 1, 5, 9]],
+            [[0, 1, 5, 6], [2, 5, 6, 9], [4, 5, 9, 10], [1, 4, 5, 8]],
+            [[5, 6, 9, 10]],
+        ]
+        choose_type = random.randint(0, len(figures) - 1)
+        return figures[choose_type]
+
+    def matrix(self, figure):
+            base_matrix = self.canvas.create_rectangle(50, 50, 110, 110, width=0)
+            base_coords = self.canvas.coords(base_matrix)
+            cell = int((base_coords[2] - base_coords[0]) / 4)
+
+            colors = ['red', 'blue']
+            # matrix for 15 x 15 cell
+            #p = [[50, 50, 65, 65], [65, 50, 80, 65], [80, 50, 95, 65], [95, 50, 110, 65],
+            #     [50, 65, 65, 80], [65, 65, 80, 80], [80, 65, 95, 80], [95, 65, 110, 80],
+            #     [50, 80, 65, 95], [65, 80, 80, 95], [80, 80, 95, 95], [95, 80, 110, 95],
+            #     [50, 95, 65, 110], [65, 95, 80, 110], [80, 95, 95, 110], [95, 95, 110, 110]
+            #     ]
+
+
+            # work matrix with cells
+            draw_matrix = [[base_coords[0] + (cell * 0), base_coords[1], base_coords[0] + (cell * 1), base_coords[3] - (cell * 3)], [base_coords[0] + (cell * 1), base_coords[1], base_coords[0] + (cell * 2), base_coords[3] - (cell * 3)], [base_coords[0] + (cell * 2), base_coords[1], base_coords[0] + (cell * 3), base_coords[3] - (cell * 3)], [base_coords[0] + (cell * 3), base_coords[1], base_coords[0] + (cell * 4), base_coords[3] - (cell * 3)],
+                 [base_coords[0] + (cell * 0), base_coords[3] - (cell * 3), base_coords[0] + (cell * 1), base_coords[3] - (cell * 2)], [base_coords[0] + (cell * 1), base_coords[3] - (cell * 3), base_coords[0] + (cell * 2), base_coords[3] - (cell * 2)], [base_coords[0] + (cell * 2), base_coords[3] - (cell * 3), base_coords[0] + (cell * 3), base_coords[3] - (cell * 2)], [base_coords[0] + (cell * 3), base_coords[3] - (cell * 3), base_coords[0] + (cell * 4), base_coords[3] - (cell * 2)],
+                 [base_coords[0] + (cell * 0), base_coords[3] - (cell * 2), base_coords[0] + (cell * 1), base_coords[3] - (cell * 1)], [base_coords[0] + (cell * 1), base_coords[3] - (cell * 2), base_coords[0] + (cell * 2), base_coords[3] - (cell * 1)], [base_coords[0] + (cell * 2), base_coords[3] - (cell * 2), base_coords[0] + (cell * 3), base_coords[3] - (cell * 1)], [base_coords[0] + (cell * 3), base_coords[3] - (cell * 2), base_coords[0] + (cell * 4), base_coords[3] - (cell * 1)],
+                 [base_coords[0] + (cell * 0), base_coords[3] - (cell * 1), base_coords[0] + (cell * 1), base_coords[3]], [base_coords[0] + (cell * 1), base_coords[3] - (cell * 1), base_coords[0] + (cell * 2), base_coords[3]], [base_coords[0] + (cell * 2), base_coords[0] + (cell * 3), base_coords[3] - (cell * 1), base_coords[3]], [base_coords[0] + (cell * 3), base_coords[3] - (cell * 1), base_coords[2], base_coords[3]]
+                 ]
+
+            for k in range(len(figure[0])):
+                for i in figure[0]:
+                    self.canvas.create_rectangle(draw_matrix[i], fill='blue')
+
 

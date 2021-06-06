@@ -1,5 +1,7 @@
 import tennis
 import tkinter
+import tetris
+
 
 class TopMenu:
     def __init__(self, root):
@@ -11,6 +13,7 @@ class TopMenu:
         top_menu.add_cascade(label='Game', menu=first_item)
         first_item.add_command(label='Main menu')
         first_item.add_command(label='Tennis', command=tennis.start)
+        first_item.add_command(label='Tetris', command=tetris.start)
         first_item.add_separator()
 
 

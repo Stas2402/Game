@@ -1,7 +1,8 @@
+import tkinter
+import time
+from objects import Ball, Platform, Score
+
 def start():
-    import tkinter
-    import time
-    from objects import Ball, Platform, Score
 
     tk = tkinter.Tk()
     tk.wm_title('Tennis')
