@@ -101,7 +101,7 @@ class TetrisFigure:
     def __init__(self, canvas):
         self.canvas = canvas
         self.figure = self.get_block()
-        self.matrix(self.figure)
+        self.matrix(self.figure, 15)
 
     def get_block(self):
         ###############
@@ -122,29 +122,51 @@ class TetrisFigure:
         choose_type = random.randint(0, len(figures) - 1)
         return figures[choose_type]
 
-    def matrix(self, figure):
-            base_matrix = self.canvas.create_rectangle(50, 50, 110, 110, width=0)
-            base_coords = self.canvas.coords(base_matrix)
-            cell = int((base_coords[2] - base_coords[0]) / 4)
+    def matrix(self, figure, cell):
 
-            colors = ['red', 'blue']
-            # matrix for 15 x 15 cell
-            #p = [[50, 50, 65, 65], [65, 50, 80, 65], [80, 50, 95, 65], [95, 50, 110, 65],
-            #     [50, 65, 65, 80], [65, 65, 80, 80], [80, 65, 95, 80], [95, 65, 110, 80],
-            #     [50, 80, 65, 95], [65, 80, 80, 95], [80, 80, 95, 95], [95, 80, 110, 95],
-            #     [50, 95, 65, 110], [65, 95, 80, 110], [80, 95, 95, 110], [95, 95, 110, 110]
-            #     ]
+            base_coords = self.canvas.coords(self.canvas.create_rectangle(50, 50, 110, 110, width=0))
 
+            height = int(base_coords[2] - base_coords[0])
+            width = int(base_coords[3] - base_coords[1])
+            x, y = int(base_coords[0]), int(base_coords[1])
+
+            lines = []
+            for j in range(0, width + cell, cell):
+                lines.append(j)
+            rows = []
+            for j in range(0, height + cell, cell):
+                rows.append(j)
 
             # work matrix with cells
-            draw_matrix = [[base_coords[0] + (cell * 0), base_coords[1], base_coords[0] + (cell * 1), base_coords[3] - (cell * 3)], [base_coords[0] + (cell * 1), base_coords[1], base_coords[0] + (cell * 2), base_coords[3] - (cell * 3)], [base_coords[0] + (cell * 2), base_coords[1], base_coords[0] + (cell * 3), base_coords[3] - (cell * 3)], [base_coords[0] + (cell * 3), base_coords[1], base_coords[0] + (cell * 4), base_coords[3] - (cell * 3)],
-                 [base_coords[0] + (cell * 0), base_coords[3] - (cell * 3), base_coords[0] + (cell * 1), base_coords[3] - (cell * 2)], [base_coords[0] + (cell * 1), base_coords[3] - (cell * 3), base_coords[0] + (cell * 2), base_coords[3] - (cell * 2)], [base_coords[0] + (cell * 2), base_coords[3] - (cell * 3), base_coords[0] + (cell * 3), base_coords[3] - (cell * 2)], [base_coords[0] + (cell * 3), base_coords[3] - (cell * 3), base_coords[0] + (cell * 4), base_coords[3] - (cell * 2)],
-                 [base_coords[0] + (cell * 0), base_coords[3] - (cell * 2), base_coords[0] + (cell * 1), base_coords[3] - (cell * 1)], [base_coords[0] + (cell * 1), base_coords[3] - (cell * 2), base_coords[0] + (cell * 2), base_coords[3] - (cell * 1)], [base_coords[0] + (cell * 2), base_coords[3] - (cell * 2), base_coords[0] + (cell * 3), base_coords[3] - (cell * 1)], [base_coords[0] + (cell * 3), base_coords[3] - (cell * 2), base_coords[0] + (cell * 4), base_coords[3] - (cell * 1)],
-                 [base_coords[0] + (cell * 0), base_coords[3] - (cell * 1), base_coords[0] + (cell * 1), base_coords[3]], [base_coords[0] + (cell * 1), base_coords[3] - (cell * 1), base_coords[0] + (cell * 2), base_coords[3]], [base_coords[0] + (cell * 2), base_coords[0] + (cell * 3), base_coords[3] - (cell * 1), base_coords[3]], [base_coords[0] + (cell * 3), base_coords[3] - (cell * 1), base_coords[2], base_coords[3]]
-                 ]
-
+            work_matrix = []
+            for i in range(len(lines)-1):
+                for j in range(len(rows)-1):
+                    cel_l = [x + rows[j], y + rows[i], x + rows[j + 1], y + rows[i + 1]]
+                    work_matrix.append(cel_l)
+            # create figure in work_matrix
             for k in range(len(figure[0])):
                 for i in figure[0]:
-                    self.canvas.create_rectangle(draw_matrix[i], fill='blue')
+                    self.canvas.create_rectangle(work_matrix[i], fill='blue')
 
+class TetrisGame:
+
+    def __init__(self, canvas):
+        self.canvas = canvas
+        self.height = self.canvas.winfo_height()
+        self.width = self.canvas.winfo_width()
+        self.base_matrix(15)
+
+    def base_matrix(self, cell):
+        lines = []
+        for i in range(0, self.height, cell):
+            line = []
+            for j in range(0, self.width, cell):
+                line.append(j)
+            lines.append(line)
+        rows = []
+        for i in range(0, self.width, cell):
+            row = []
+            for j in range(0, self.height, cell):
+                row.append(j)
+            rows.append(row)
 
